@@ -1,5 +1,8 @@
 # Baby Sonda
 
+This Baby Sonda version 1!
+
+
 ## Install
 
 ### Clone the repository

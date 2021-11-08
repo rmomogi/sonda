@@ -35,15 +35,6 @@ bundle && yarn
 
 Using [dotenv](https://github.com/bkeepers/dotenv):
 
-### Add heroku remotes
-
-Using [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli):
-
-```shell
-heroku git:remote -a project
-heroku git:remote --remote heroku-staging -a project-staging
-```
-
 ## Swagger
 
 Generate documentation from API Baby Sonda
@@ -53,6 +44,8 @@ rake rswag:specs:swaggerize
 ```
 
 After generate, access the [API Documentation] (http://server/api-docs/index.html)
+
+![image](https://user-images.githubusercontent.com/133262/140820191-af4e0bd6-6c84-4dd1-b339-ca4e45ef8588.png)
 
 ## Serve
 

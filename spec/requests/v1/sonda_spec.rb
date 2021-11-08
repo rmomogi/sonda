@@ -2,10 +2,12 @@
 
 require 'swagger_helper'
 
-RSpec.describe 'Sonda API', type: :request do
+describe 'Sonda API', swagger_doc: 'v1/swagger.yaml' do
+  include JsonHelpers
+
   path '/v1/sonda' do
     get 'Initialize sonda' do
-      tags :sonda
+      tags :Sonda
       produces 'application/json'
 
       response '200', 'Reset position' do
@@ -28,7 +30,7 @@ RSpec.describe 'Sonda API', type: :request do
 
   path '/v1/sonda/show' do
     get 'Sonda informations' do
-      tags :sonda
+      tags :Sonda
       produces 'application/json'
 
       response '200', 'Get position' do
@@ -51,17 +53,30 @@ RSpec.describe 'Sonda API', type: :request do
 
   path '/v1/sonda/move' do
     post 'Sonda commands' do
-      tags :sonda
+      tags :Sonda
       produces 'application/json'
       consumes 'application/json'
 
-      parameter name: :sonda, in: :body, schema: {
+      parameter name: :params, in: :body, schema: {
         type: :object,
+        description: 'The commands payload',
+        example: {
+          movimentos: ['GE', 'M', 'M', 'M', 'GD', 'M', 'M']
+        },
         properties: {
-          movimentos: { type: :array }
+          movimentos: { type: 'array', items: {
+            type: 'string',
+            example: 'GD'
+          } }
         },
         required: ['movimentos']
       }
+
+      let(:params) do
+        {
+          movimentos: %w[GE M M M GD M M]
+        }
+      end
 
       response '200', 'Get position after commands' do
         schema type: :object,
@@ -71,20 +86,13 @@ RSpec.describe 'Sonda API', type: :request do
                  face: { type: :string }
                },
                required: %w[x y face]
-
-        let(:sonda) do
-          {
-            movimentos: %w[GE M M M GD M M]
-          }
-        end
-
         run_test!
       end
 
       response '500', 'Sonda failed' do
         schema type: :object,
                properties: {
-                 erro: { type: :string }
+                 erro: { type: :string, example: 'Um movimento inválido foi detectado, infelizmente a sonda ainda não possui a habilidade de #vvv'  }
                },
                required: %w[erro]
 
@@ -94,7 +102,11 @@ RSpec.describe 'Sonda API', type: :request do
           }
         end
 
-        run_test!
+        run_test! do |_response|
+          expect(json_response[:errors]).to eq [
+            { erro: 'Um movimento inválido foi detectado, infelizmente a sonda ainda não possui a habilidade de #vvv' }
+          ]
+        end
       end
     end
   end

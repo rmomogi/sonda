@@ -20,7 +20,7 @@ AllCops:
 # Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
 # IgnoredMethods: refine
 Metrics/BlockLength:
-  Max: 81
+  Max: 120
 
 # Offense count: 1
 # Configuration parameters: IgnoredMethods.
